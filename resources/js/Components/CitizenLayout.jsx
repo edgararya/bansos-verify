@@ -1,19 +1,12 @@
 import { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
-
-const imgLogo    = "https://www.figma.com/api/mcp/asset/faf6da72-bd1f-4831-be38-ba3e4e1bf3db";
-const imgDash    = "https://www.figma.com/api/mcp/asset/a809efa5-b7a1-4cc6-ac0e-a3ce7539fcaa";
-const imgUpdate  = "https://www.figma.com/api/mcp/asset/19739e8f-a96d-4b7d-b530-8a854a58c675";
-const imgReport  = "https://www.figma.com/api/mcp/asset/47421502-9989-4e36-ba35-d83177e22609";
-const imgSettings= "https://www.figma.com/api/mcp/asset/ec8318b7-894a-4d3f-8a0c-70a7c5aec356";
-const imgUser    = "https://www.figma.com/api/mcp/asset/4dbd06a9-9406-412a-a73b-0745633eab61";
-const imgLogout  = "https://www.figma.com/api/mcp/asset/44161d3f-8f88-41c8-9d72-6ded15d3a2e5";
+import { ShieldCheck, LayoutDashboard, RefreshCw, FileText, Settings, User, LogOut } from 'lucide-react';
 
 const MENU = [
-    { key: 'dashboard',        label: 'Dashboard',          icon: imgDash,     href: 'citizen.dashboard' },
-    { key: 'pemutakhiran',     label: 'Pemutakhiran Data',  icon: imgUpdate,   href: 'citizen.update' },
-    { key: 'portal-pengaduan', label: 'Portal Pengaduan',   icon: imgReport,   href: 'citizen.complaint' },
-    { key: 'pengaturan',       label: 'Pengaturan',         icon: imgSettings, href: 'citizen.settings' },
+    { key: 'dashboard',        label: 'Dashboard',          Icon: LayoutDashboard, href: 'citizen.dashboard' },
+    { key: 'pemutakhiran',     label: 'Pemutakhiran Data',  Icon: RefreshCw,       href: 'citizen.update' },
+    { key: 'portal-pengaduan', label: 'Portal Pengaduan',   Icon: FileText,        href: 'citizen.complaint' },
+    { key: 'pengaturan',       label: 'Pengaturan',         Icon: Settings,        href: 'citizen.settings' },
 ];
 
 export default function CitizenLayout({ children, activeMenu }) {
@@ -29,7 +22,7 @@ export default function CitizenLayout({ children, activeMenu }) {
             <aside className="w-64 bg-white border-r border-black/10 shadow flex flex-col shrink-0">
                 <div className="flex items-center gap-2 px-6 py-6">
                     <div className="bg-[#3f51b5] w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0">
-                        <img src={imgLogo} alt="logo" className="w-6 h-6" />
+                        <ShieldCheck size={24} color="white" />
                     </div>
                     <div>
                         <p className="text-[#3f51b5] font-bold text-[18px] leading-[22px]">Sistem Bansos</p>
@@ -50,7 +43,7 @@ export default function CitizenLayout({ children, activeMenu }) {
                                     color: isActive ? '#3f51b5' : '#717182',
                                 }}
                             >
-                                <img src={item.icon} alt="" className="w-5 h-5 shrink-0" />
+                                <item.Icon size={20} />
                                 {item.label}
                             </button>
                         );
@@ -60,7 +53,7 @@ export default function CitizenLayout({ children, activeMenu }) {
                 <div className="border-t border-black/10 px-4 py-4 flex flex-col gap-4">
                     <div className="flex items-center gap-3 px-2">
                         <div className="w-10 h-10 rounded-full bg-[#f5f7fa] border-2 border-white shadow flex items-center justify-center shrink-0">
-                            <img src={imgUser} alt="" className="w-5 h-5" />
+                            <User size={20} color="#717182" />
                         </div>
                         <div>
                             <p className="text-[#2c2c2c] text-sm font-medium">{user?.name ?? 'Budi Santoso'}</p>
@@ -71,7 +64,7 @@ export default function CitizenLayout({ children, activeMenu }) {
                         onClick={handleLogout}
                         className="flex items-center gap-2 h-9 w-full border border-black/10 bg-white rounded-lg px-3 hover:bg-red-50 transition"
                     >
-                        <img src={imgLogout} alt="" className="w-4 h-4" />
+                        <LogOut size={16} color="#e7000b" />
                         <span className="text-[#e7000b] text-sm font-medium">Keluar</span>
                     </button>
                 </div>
@@ -81,7 +74,7 @@ export default function CitizenLayout({ children, activeMenu }) {
                 <div className="xl:hidden sticky top-0 z-20 h-16 bg-[#3f51b5] border-b border-black/10 flex items-center justify-between px-5">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                            <img src={imgUser} alt="" className="w-4 h-4" />
+                            <User size={16} color="white" />
                         </div>
                         <p className="text-white text-2xl font-medium">Panel Warga</p>
                     </div>

@@ -57,9 +57,35 @@ export default function PortalPengaduan() {
                             </p>
                         </div>
 
-                        <input type="hidden" name="kategori" value={data.kategori} />
-                        <input type="hidden" name="lokasi" value={data.lokasi} />
-                        <input type="hidden" name="is_anonymous" value={data.is_anonymous ? '1' : '0'} />
+                        {/* Kategori */}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[#2c2c2c] text-sm font-medium">Kategori Laporan</label>
+                            <select
+                                value={data.kategori}
+                                onChange={e => setData('kategori', e.target.value)}
+                                className="w-full bg-[#f3f3f5] rounded-lg px-3 py-2.5 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
+                            >
+                                <option value="laporan-resmi">Laporan Resmi</option>
+                                <option value="kecurangan-data">Kecurangan Data</option>
+                                <option value="penyalahgunaan-bantuan">Penyalahgunaan Bantuan</option>
+                                <option value="petugas-tidak-profesional">Petugas Tidak Profesional</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                            {errors.kategori && <p className="text-red-500 text-xs">{errors.kategori}</p>}
+                        </div>
+
+                        {/* Lokasi */}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[#2c2c2c] text-sm font-medium">Lokasi Kejadian</label>
+                            <input
+                                type="text"
+                                value={data.lokasi}
+                                onChange={e => setData('lokasi', e.target.value)}
+                                placeholder="Contoh: Kantor Kelurahan Suka Maju, RT 03/RW 02"
+                                className="w-full bg-[#f3f3f5] rounded-lg px-3 py-2.5 text-sm text-[#2c2c2c] placeholder-[#717182] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
+                            />
+                            {errors.lokasi && <p className="text-red-500 text-xs">{errors.lokasi}</p>}
+                        </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-[#2c2c2c] text-sm font-medium">Rincian Laporan Pengaduan</label>

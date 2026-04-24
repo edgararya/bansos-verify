@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import AuditorLayout from '@/Components/AuditorLayout';
-
-const imgApprove = "https://www.figma.com/api/mcp/asset/9d81f4a1-5bf8-431d-a076-d9f83676e98c";
-const imgReject  = "https://www.figma.com/api/mcp/asset/53be69c4-a4a4-4c23-b6c6-1fd0ce0c13fc";
-const imgSuspend = "https://www.figma.com/api/mcp/asset/d1919eeb-3630-4b22-8ca3-3dea05c03f21";
+import { Check, XCircle, Slash } from 'lucide-react';
 
 const SAMPLE_LOGS = [
     { id: 1, timestamp: '16 Apr 2026 10:30', pelaku: 'Bapak RT / Admin',   warga: 'Joko Widodo',   skor: 45, aksi: 'Disetujui', bypass: true,  rowBg: 'rgba(70,8,9,0.15)' },
@@ -32,7 +29,7 @@ function AksiBadge({ aksi }) {
     const isApprove = aksi === 'Disetujui';
     return (
         <span className={`flex items-center gap-1 text-sm font-medium ${isApprove ? 'text-[#00d492]' : 'text-[#ff6467]'}`}>
-            <img src={isApprove ? imgApprove : imgReject} alt="" className="w-4 h-4" />
+            {isApprove ? <Check size={16} /> : <XCircle size={16} />}
             {aksi}
         </span>
     );
@@ -112,7 +109,7 @@ export default function AuditTrailLogs() {
                                                         className="flex items-center gap-1.5 px-3 h-8 rounded-lg text-sm font-bold text-[#ff6467] transition disabled:opacity-60"
                                                         style={{ background: '#460809', border: '0.8px solid #9f0712' }}
                                                     >
-                                                        <img src={imgSuspend} alt="" className="w-4 h-4" />
+                                                        <Slash size={16} />
                                                         {suspendLoading === row.id ? '...' : 'Suspend'}
                                                     </button>
                                                 )

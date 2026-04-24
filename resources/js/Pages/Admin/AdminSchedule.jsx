@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useForm, usePage, router } from '@inertiajs/react';
 import AdminLayout from '@/Components/AdminLayout';
-
-const imgBroadcast = "https://www.figma.com/api/mcp/asset/cc41064e-1236-4bbc-85a1-e5498acc3be7";
-const imgDone      = "https://www.figma.com/api/mcp/asset/25b0e8ec-a1b0-4079-8022-f70c713c72af";
+import { Radio, CheckCircle2 } from 'lucide-react';
 
 const SAMPLE_CHECKLIST = [
     { id: 1, nama: 'Rina Marlina', nik: '3171234567890126', jenis: 'Bantuan Tunai',  status: 'Siap Diambil' },
@@ -60,7 +58,7 @@ export default function AdminSchedule() {
                         style={{ border: '0.8px solid rgba(0,0,0,0.1)', borderTopWidth: '4px', borderTopColor: '#fe9a00' }}
                     >
                         <div className="px-6 pt-5 pb-3 flex items-center gap-2" style={{ borderBottom: '0.8px solid rgba(0,0,0,0.08)' }}>
-                            <img src={imgBroadcast} alt="" className="w-5 h-5 shrink-0" />
+                            <Radio size={20} color="#2c2c2c" />
                             <p className="text-[#2c2c2c] font-medium text-[18px] leading-7">Broadcast Jadwal</p>
                         </div>
                         <form onSubmit={submitBroadcast} className="px-5 py-4 flex flex-col gap-4">
@@ -107,9 +105,9 @@ export default function AdminSchedule() {
 
                     <div className="flex-1 bg-white rounded-[14px] border border-black/10 shadow-sm overflow-hidden">
                         <div className="px-6 pt-5 pb-3" style={{ borderBottom: '0.8px solid rgba(0,0,0,0.08)' }}>
-                            <p className="text-[#2c2c2c] font-medium text-[18px]">Checklist Pengambilan Hari Ini</p>
+                            <p className="text-[#2c2c2c] font-medium text-[18px]">Checklist Pengambilan Bansos</p>
                             <p className="text-[#717182] text-base mt-1">
-                                Tandai warga yang sudah mengambil bansos secara fisik.
+                                Semua warga yang disetujui dan belum menerima bantuan. Tandai setelah selesai.
                             </p>
                         </div>
                         <div className="overflow-x-auto">
@@ -118,6 +116,7 @@ export default function AdminSchedule() {
                                     <tr style={{ borderBottom: '0.8px solid rgba(0,0,0,0.1)' }}>
                                         <th className="text-left px-4 py-3 text-[#2c2c2c] font-medium">Nama & NIK</th>
                                         <th className="text-left px-4 py-3 text-[#2c2c2c] font-medium">Jenis Bantuan</th>
+                                        <th className="text-left px-4 py-3 text-[#2c2c2c] font-medium">Jadwal</th>
                                         <th className="text-left px-4 py-3 text-[#2c2c2c] font-medium">Status</th>
                                         <th className="text-right px-4 py-3 text-[#2c2c2c] font-medium">Aksi</th>
                                     </tr>
@@ -135,6 +134,7 @@ export default function AdminSchedule() {
                                                     <p className="text-[#717182] text-xs">{row.nik}</p>
                                                 </td>
                                                 <td className="px-4 py-3 text-[#2c2c2c]">{row.jenis}</td>
+                                                <td className="px-4 py-3 text-[#717182] whitespace-nowrap">{row.jadwal ?? '-'}</td>
                                                 <td className="px-4 py-3">
                                                     {isDone ? (
                                                         <span className="inline-block px-2 py-0.5 rounded-lg text-xs font-medium text-white" style={{ background: '#00bc7d' }}>
@@ -149,7 +149,7 @@ export default function AdminSchedule() {
                                                 <td className="px-4 py-3 text-right">
                                                     {isDone ? (
                                                         <span className="inline-flex items-center gap-1 text-[#009966] text-sm font-medium opacity-60">
-                                                            <img src={imgDone} alt="" className="w-4 h-4" />
+                                                            <CheckCircle2 size={16} color="#009966" />
                                                             Berhasil
                                                         </span>
                                                     ) : (

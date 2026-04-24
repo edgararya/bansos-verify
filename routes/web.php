@@ -81,6 +81,7 @@ Route::prefix('auditor')->name('auditor.')->group(function () {
     Route::middleware('auth:auditor')->group(function () {
         Route::post('logout', [AuditorLoginController::class, 'destroy'])->name('logout');
         Route::get('dashboard',        [AuditTrailController::class, 'whistleblowing'])->name('dashboard');
+        Route::patch('report/{id}/status', [AuditTrailController::class, 'updateReportStatus'])->name('report.update-status');
         Route::get('audit',            [AuditTrailController::class, 'index'])->name('audit');
         Route::post('suspend/{id}',    [AuditTrailController::class, 'suspend'])->name('suspend');
         Route::get('report',           [LaporanEksekutifController::class, 'index'])->name('report');

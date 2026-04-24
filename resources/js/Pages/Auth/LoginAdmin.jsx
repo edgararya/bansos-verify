@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
-
-const imgLogo = "https://www.figma.com/api/mcp/asset/099da505-4059-4bb3-8e1b-ed11bfa2e308";
+import { ShieldCheck } from 'lucide-react';
 
 export default function LoginAdmin({ status }) {
     const [showPass, setShowPass] = useState(false);
@@ -24,7 +23,7 @@ export default function LoginAdmin({ status }) {
             <div className="w-full max-w-[448px] flex flex-col items-center gap-6">
                 <div className="flex items-center gap-3">
                     <div className="bg-white rounded-[10px] p-2.5 w-12 h-12 flex items-center justify-center">
-                        <img src={imgLogo} alt="logo" className="w-7 h-7" />
+                        <ShieldCheck size={28} color="#00796b" />
                     </div>
                     <div>
                         <p className="text-white font-bold text-xl leading-tight">Portal Admin Desa</p>

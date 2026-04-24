@@ -1,23 +1,21 @@
 import { usePage } from '@inertiajs/react';
 import CitizenLayout from '@/Components/CitizenLayout';
-
-const imgClock   = "https://www.figma.com/api/mcp/asset/5203b1d2-34cb-456b-88dd-969fc86a6060";
-const imgEmpty   = "https://www.figma.com/api/mcp/asset/ddfbae96-b85a-4029-abdd-d320ca64bbff";
+import { Clock, Inbox } from 'lucide-react';
 
 const STATUS_CONFIG = {
     'MENUNGGU VERIFIKASI': {
         gradient: 'linear-gradient(154.66deg, #FFB900 0%, #FF6900 100%)',
-        icon: imgClock,
+        icon: Clock,
         description: 'Data Anda sedang dalam tahap peninjauan oleh petugas lapangan. Proses ini memerlukan waktu maksimal 14 hari kerja sejak pemutakhiran data terakhir.',
     },
     'DITERIMA': {
         gradient: 'linear-gradient(154.66deg, #00bc7d 0%, #007a55 100%)',
-        icon: imgClock,
+        icon: Clock,
         description: 'Selamat! Data Anda telah diverifikasi dan Anda berhak menerima bantuan sosial.',
     },
     'DITOLAK': {
         gradient: 'linear-gradient(154.66deg, #fb2c36 0%, #c10007 100%)',
-        icon: imgClock,
+        icon: Clock,
         description: 'Maaf, berdasarkan hasil verifikasi data, Anda belum memenuhi kriteria penerima bantuan saat ini.',
     },
 };
@@ -55,7 +53,7 @@ export default function CitizenDashboard() {
                     style={{ background: cfg.gradient }}
                 >
                     <div className="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mb-1">
-                        <img src={cfg.icon} alt="" className="w-10 h-10" />
+                        <cfg.icon size={40} color="white" />
                     </div>
                     <p className="text-white/80 text-sm font-semibold uppercase tracking-[1.4px]">Status Saat Ini</p>
                     <p className="text-white font-bold text-5xl leading-tight">{statusKey}</p>
@@ -92,7 +90,7 @@ export default function CitizenDashboard() {
                         {riwayat.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full gap-3 py-8">
                                 <div className="w-12 h-12 bg-[#f5f7fa] rounded-full flex items-center justify-center">
-                                    <img src={imgEmpty} alt="" className="w-6 h-6" />
+                                    <Inbox size={24} color="#717182" />
                                 </div>
                                 <p className="text-[#717182] text-base text-center">
                                     Belum ada riwayat penyaluran karena status masih dalam proses verifikasi.

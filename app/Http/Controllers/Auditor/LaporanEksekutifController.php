@@ -23,7 +23,7 @@ class LaporanEksekutifController extends Controller
             ],
             [
                 'label' => 'Aduan Masyarakat',
-                'value' => AnonymousReport::whereIn('status', ['Menunggu Investigasi', 'Sedang Diproses'])->count() . ' Tiket',
+                'value' => AnonymousReport::whereIn('status', ['Menunggu', 'Sedang Diproses'])->count() . ' Tiket',
                 'sub'   => 'Menunggu Resolusi & Investigasi',
                 'color' => '#ff8904',
             ],
@@ -35,8 +35,43 @@ class LaporanEksekutifController extends Controller
             ],
         ];
 
+        // --- Data Chart: Tren Permohonan 6 Bulan Terakhir ---
+        $chartTrend = collect(range(5, 0))->map(function ($offset) {
+            $month = now()->subMonths($offset);
+            $label = $month->locale('id')->isoFormat('MMM');
+            return [
+                'bulan'    => $label,
+                'disetujui' => Application::whereMonth('created_at', $month->month)
+                                ->whereYear('created_at', $month->year)
+                                ->where('status', 'approved')->count(),
+                'ditolak'  => Application::whereMonth('created_at', $month->month)
+                                ->whereYear('created_at', $month->year)
+                                ->where('status', 'rejected')->count(),
+                'pending'  => Application::whereMonth('created_at', $month->month)
+                                ->whereYear('created_at', $month->year)
+                                ->where('status', 'pending')->count(),
+            ];
+        })->values();
+
+        // --- Data Chart: Distribusi Status Pekerjaan ---
+        $empMap = [
+            'unemployed' => 'Tidak Bekerja',
+            'informal'   => 'Pekerja Informal',
+            'formal'     => 'Pekerja Formal',
+        ];
+        $chartDistribusi = Application::select('employment_status')
+            ->selectRaw('COUNT(*) as total')
+            ->groupBy('employment_status')
+            ->get()
+            ->map(fn($r) => [
+                'name'  => $empMap[$r->employment_status] ?? $r->employment_status,
+                'value' => $r->total,
+            ]);
+
         return Inertia::render('Auditor/LaporanEksekutif', [
-            'stats' => $stats,
+            'stats'           => $stats,
+            'chartTrend'      => $chartTrend,
+            'chartDistribusi' => $chartDistribusi,
         ]);
     }
 

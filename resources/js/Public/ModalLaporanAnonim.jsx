@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
-
-const imgAlert = "https://www.figma.com/api/mcp/asset/7579b01c-d20d-444d-98e0-ce76501ff5ec";
+import { AlertTriangle } from 'lucide-react';
 
 export default function ModalLaporanAnonim({ isOpen, onClose }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -44,7 +43,7 @@ export default function ModalLaporanAnonim({ isOpen, onClose }) {
                 <div className="flex flex-col gap-5">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <img src={imgAlert} alt="" className="w-5 h-5 shrink-0" />
+                            <AlertTriangle size={20} color="#e7000b" className="shrink-0" />
                             <h2 className="text-[#e7000b] font-semibold text-[18px] leading-[18px]">Laporan Anonim</h2>
                         </div>
                         <p className="text-[#717182] text-sm leading-5">

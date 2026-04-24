@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 
-const imgCheck  = "https://www.figma.com/api/mcp/asset/b88281c9-662a-42cc-8dac-3b2fb90023d9";
-const imgReject = "https://www.figma.com/api/mcp/asset/a19ac471-df20-47bb-a5d5-e092d2bc87a1";
-
 function getSkorStyle(skor) {
     if (skor >= 70) return { bg: '#d0fae5', border: '#00bc7d', text: '#007a55' };
     if (skor >= 50) return { bg: '#fef3c6', border: '#fe9a00', text: '#bb4d00' };

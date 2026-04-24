@@ -14,8 +14,11 @@ class AdminScheduleController extends Controller
 {
     public function index(): Response
     {
-        $checklist = Disbursement::where('schedule_date', today())
+        // Tampilkan semua disbursement yang belum disalurkan (status bukan Telah Disalurkan)
+        // agar admin bisa melihat dan mencentang meskipun tanggal berbeda
+        $checklist = Disbursement::where('status', '!=', 'Telah Disalurkan')
             ->with('user')
+            ->orderBy('schedule_date')
             ->get()
             ->map(fn($d) => [
                 'id'     => $d->id,
@@ -23,6 +26,7 @@ class AdminScheduleController extends Controller
                 'nik'    => $d->user->nik,
                 'jenis'  => $d->program,
                 'status' => $d->status,
+                'jadwal' => $d->schedule_date ? \Carbon\Carbon::parse($d->schedule_date)->format('d M Y') : '-',
             ]);
 
         return Inertia::render('Admin/AdminSchedule', [

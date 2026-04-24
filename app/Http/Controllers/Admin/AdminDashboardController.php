@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\AuditLog;
+use App\Models\Disbursement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +63,24 @@ class AdminDashboardController extends Controller
             'action'         => $request->action,
             'is_suspicious'  => ($request->action === 'setujui' && $application->score < 70),
         ]);
+
+        // Buat record disbursement saat disetujui (agar muncul di checklist pengambilan)
+        if ($request->action === 'setujui') {
+            // Gunakan tanggal jadwal berikutnya, atau hari ini jika tidak ada jadwal
+            $nextSchedule = \App\Models\Schedule::where('date', '>=', today())
+                ->orderBy('date')
+                ->first();
+
+            Disbursement::updateOrCreate(
+                ['user_id' => $application->user_id],
+                [
+                    'program'       => $application->user->program ?? 'Bantuan Pangan Non Tunai (BPNT)',
+                    'status'        => 'Siap Diambil',
+                    'amount'        => 0,
+                    'schedule_date' => $nextSchedule?->date ?? today(),
+                ]
+            );
+        }
 
         return back()->with('success', 'Keputusan validasi berhasil disimpan.');
     }

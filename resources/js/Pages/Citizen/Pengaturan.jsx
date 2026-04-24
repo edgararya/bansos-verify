@@ -1,159 +1,260 @@
+import { useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import CitizenLayout from '@/Components/CitizenLayout';
 
-export default function Pengaturan() {
-    const { auth } = usePage().props;
-    const user = auth?.user;
+/* ── Komponen Input ── */
+function Field({ label, error, children }) {
+    return (
+        <div className="flex flex-col gap-1.5">
+            <label className="text-[#2c2c2c] text-sm font-medium">{label}</label>
+            {children}
+            {error && <p className="text-red-500 text-xs">{error}</p>}
+        </div>
+    );
+}
 
-    const { data, setData, put, processing, errors, recentlySuccessful } = useForm({
-        name: user?.name ?? '',
-        email: user?.email ?? '',
-        phone: user?.phone ?? '',
-        current_password: '',
-        password: '',
+function TextInput({ type = 'text', ...props }) {
+    return (
+        <input
+            type={type}
+            className="bg-[#f3f3f5] rounded-lg px-3 py-2.5 text-sm text-[#2c2c2c] placeholder-[#717182] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition w-full"
+            {...props}
+        />
+    );
+}
+
+/* ── Toggle Switch ── */
+function Toggle({ checked, onChange, label, desc }) {
+    return (
+        <div className="flex items-center justify-between gap-4 py-3.5 border-b border-black/[0.06] last:border-0">
+            <div>
+                <p className="text-[#2c2c2c] text-sm font-medium">{label}</p>
+                <p className="text-[#717182] text-xs mt-0.5">{desc}</p>
+            </div>
+            <button
+                type="button"
+                onClick={() => onChange(!checked)}
+                className="relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200"
+                style={{ background: checked ? '#3f51b5' : '#d1d5db' }}
+            >
+                <span
+                    className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-all duration-200"
+                    style={{ left: checked ? '22px' : '2px' }}
+                />
+            </button>
+        </div>
+    );
+}
+
+/* ── Card wrapper ── */
+function Card({ topColor, children }) {
+    return (
+        <div
+            className="bg-white rounded-[14px] shadow-sm"
+            style={{
+                border: '0.8px solid rgba(0,0,0,0.1)',
+                borderTopWidth: '4px',
+                borderTopColor: topColor ?? 'transparent',
+            }}
+        >
+            {children}
+        </div>
+    );
+}
+
+export default function Pengaturan() {
+    const { auth, flash } = usePage().props;
+    const user = auth?.user ?? {};
+
+    /* state untuk 2 form terpisah */
+    const profileForm = useForm({
+        name:  user.name  ?? '',
+        email: user.email ?? '',
+        phone: user.phone ?? '',
+    });
+
+    const pwForm = useForm({
+        current_password:      '',
+        password:              '',
         password_confirmation: '',
     });
 
+    const [notifWa,    setNotifWa]    = useState(true);
+    const [notifEmail, setNotifEmail] = useState(false);
+
     function submitProfile(e) {
         e.preventDefault();
-        put(route('citizen.settings.update-profile'));
+        profileForm.put(route('citizen.settings.update-profile'));
     }
 
     function submitPassword(e) {
         e.preventDefault();
-        put(route('citizen.settings.update-password'), {
-            onSuccess: () => {
-                setData('current_password', '');
-                setData('password', '');
-                setData('password_confirmation', '');
-            }
+        pwForm.put(route('citizen.settings.update-password'), {
+            onSuccess: () => pwForm.reset(),
         });
     }
 
     return (
         <CitizenLayout activeMenu="pengaturan">
-            <div className="px-4 sm:px-6 lg:px-12 pt-6 lg:pt-12 pb-10 lg:pb-16 flex flex-col gap-6">
+            <div className="px-4 sm:px-6 lg:px-12 pt-6 lg:pt-12 pb-10 lg:pb-16 flex flex-col gap-8">
+
+                {/* Header */}
                 <div>
                     <h1 className="text-[#2c2c2c] font-bold text-3xl leading-9">Pengaturan Akun</h1>
-                    <p className="text-[#717182] text-base mt-2">
-                        Kelola keamanan akun dan preferensi notifikasi Anda.
+                    <p className="text-[#717182] text-sm mt-1.5">
+                        Kelola informasi profil, keamanan akun, dan preferensi notifikasi Anda.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-[14px] border border-black/10 shadow-sm p-6">
-                        <div className="mb-5">
-                            <p className="text-[#2c2c2c] font-semibold text-[36px] md:text-[38px]">Ubah Password</p>
-                            <p className="text-[#717182] text-base mt-1">Pastikan password baru Anda kuat dan aman</p>
-                        </div>
-                        <form onSubmit={submitPassword} className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-2">
-                                <label className="text-[#2c2c2c] text-sm font-medium">Password Saat Ini</label>
-                                <input
-                                    type="password"
-                                    value={data.current_password}
-                                    onChange={e => setData('current_password', e.target.value)}
-                                    className="bg-[#f3f3f5] rounded-lg px-3 py-2.5 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
-                                />
-                                {errors.current_password && <p className="text-red-500 text-xs">{errors.current_password}</p>}
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label className="text-[#2c2c2c] text-sm font-medium">Password Baru</label>
-                                <input
-                                    type="password"
-                                    value={data.password}
-                                    onChange={e => setData('password', e.target.value)}
-                                    className="bg-[#f3f3f5] rounded-lg px-3 py-2.5 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
-                                />
-                                {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label className="text-[#2c2c2c] text-sm font-medium">Konfirmasi Password Baru</label>
-                                <input
-                                    type="password"
-                                    value={data.password_confirmation}
-                                    onChange={e => setData('password_confirmation', e.target.value)}
-                                    className="bg-[#f3f3f5] rounded-lg px-3 py-2.5 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="mt-2 w-full bg-[#3f51b5] hover:bg-[#3447a3] text-white font-medium text-sm h-10 rounded-lg transition disabled:opacity-60"
-                            >
-                                {processing ? 'Memperbarui...' : 'Perbarui Password'}
-                            </button>
-                        </form>
+                {/* Flash */}
+                {flash?.success && (
+                    <div className="rounded-[10px] px-4 py-3 bg-[rgba(0,122,85,0.08)] border border-[rgba(0,122,85,0.25)]">
+                        <p className="text-[#007a55] text-sm font-medium">✓ {flash.success}</p>
                     </div>
+                )}
 
-                    <div className="bg-white rounded-[14px] border border-black/10 shadow-sm p-6">
-                        <div className="mb-7">
-                            <p className="text-[#2c2c2c] font-semibold text-[36px] md:text-[38px]">Preferensi Notifikasi</p>
-                            <p className="text-[#717182] text-base mt-1">Pilih bagaimana Anda ingin menerima pembaruan status</p>
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+                    {/* ── Kartu Kiri: Profil ── */}
+                    <Card topColor="#3f51b5">
+                        <div className="px-6 pt-5 pb-4 border-b border-black/[0.07]">
+                            <p className="text-[#2c2c2c] font-semibold text-base">Informasi Profil</p>
+                            <p className="text-[#717182] text-xs mt-0.5">Perbarui nama, email, dan nomor telepon Anda</p>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <p className="text-[#2c2c2c] font-medium text-[28px] leading-tight">Notifikasi WhatsApp</p>
-                                    <p className="text-[#717182] text-sm mt-1">Kirim pembaruan status ke nomor WhatsApp terdaftar.</p>
+                        <form onSubmit={submitProfile} className="px-6 py-5 flex flex-col gap-4">
+                            {/* Avatar placeholder */}
+                            <div className="flex items-center gap-4 pb-2">
+                                <div
+                                    className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0"
+                                    style={{ background: 'linear-gradient(135deg,#3f51b5,#5c6bc0)' }}
+                                >
+                                    {(user.name ?? 'U')[0].toUpperCase()}
                                 </div>
-                                <button type="button" className="mt-1 relative w-12 h-7 rounded-full bg-[#3f51b5]">
-                                    <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-white" />
-                                </button>
+                                <div>
+                                    <p className="text-[#2c2c2c] font-semibold text-sm">{user.name}</p>
+                                    <p className="text-[#717182] text-xs">{user.email}</p>
+                                    {user.nik && <p className="text-[#717182] text-xs">NIK: {user.nik}</p>}
+                                </div>
                             </div>
 
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <p className="text-[#2c2c2c] font-medium text-[28px] leading-tight">Notifikasi Email</p>
-                                    <p className="text-[#717182] text-sm mt-1">Terima informasi program bantuan melalui Email.</p>
-                                </div>
-                                <button type="button" className="mt-1 relative w-12 h-7 rounded-full bg-[#e5e7eb]">
-                                    <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-white" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <form onSubmit={submitProfile} className="mt-8 border-t border-black/10 pt-5">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <input
-                                    type="text"
-                                    value={data.name}
-                                    onChange={e => setData('name', e.target.value)}
-                                    placeholder="Nama Lengkap"
-                                    className="bg-[#f3f3f5] rounded-lg px-3 py-2 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
+                            <Field label="Nama Lengkap" error={profileForm.errors.name}>
+                                <TextInput
+                                    value={profileForm.data.name}
+                                    onChange={e => profileForm.setData('name', e.target.value)}
+                                    placeholder="Nama lengkap sesuai KTP"
                                 />
-                                <input
+                            </Field>
+
+                            <Field label="Alamat Email" error={profileForm.errors.email}>
+                                <TextInput
                                     type="email"
-                                    value={data.email}
-                                    onChange={e => setData('email', e.target.value)}
-                                    placeholder="Email"
-                                    className="bg-[#f3f3f5] rounded-lg px-3 py-2 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
+                                    value={profileForm.data.email}
+                                    onChange={e => profileForm.setData('email', e.target.value)}
+                                    placeholder="contoh@email.com"
                                 />
-                                <input
+                            </Field>
+
+                            <Field label="Nomor Telepon / WhatsApp" error={profileForm.errors.phone}>
+                                <TextInput
                                     type="tel"
-                                    value={data.phone}
-                                    onChange={e => setData('phone', e.target.value)}
-                                    placeholder="No. Telepon"
-                                    className="md:col-span-2 bg-[#f3f3f5] rounded-lg px-3 py-2 text-sm text-[#2c2c2c] border border-transparent focus:outline-none focus:border-[#3f51b5] focus:bg-white transition"
+                                    value={profileForm.data.phone}
+                                    onChange={e => profileForm.setData('phone', e.target.value)}
+                                    placeholder="08xxxxxxxxxx"
                                 />
-                            </div>
-                            <div className="mt-4 flex items-center gap-3">
+                            </Field>
+
+                            <div className="flex items-center gap-3 pt-1">
                                 <button
                                     type="submit"
-                                    disabled={processing}
-                                    className="bg-[#3f51b5] hover:bg-[#3447a3] text-white font-medium text-sm px-4 h-9 rounded-lg transition disabled:opacity-60"
+                                    disabled={profileForm.processing}
+                                    className="bg-[#3f51b5] hover:bg-[#3447a3] text-white font-medium text-sm px-5 h-9 rounded-lg transition disabled:opacity-60"
                                 >
-                                    Simpan Profil
+                                    {profileForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
                                 </button>
-                                {recentlySuccessful && (
-                                    <p className="text-[#007a55] text-sm font-medium">✓ Berhasil disimpan</p>
-                                )}
-                                {(errors.name || errors.email || errors.phone) && (
-                                    <p className="text-red-500 text-xs">Periksa kembali data profil Anda.</p>
+                                {profileForm.recentlySuccessful && (
+                                    <p className="text-[#007a55] text-sm">✓ Profil diperbarui</p>
                                 )}
                             </div>
                         </form>
+                    </Card>
+
+                    {/* ── Kartu Kanan: Password + Notifikasi ── */}
+                    <div className="flex flex-col gap-6">
+
+                        {/* Password */}
+                        <Card topColor="#e53935">
+                            <div className="px-6 pt-5 pb-4 border-b border-black/[0.07]">
+                                <p className="text-[#2c2c2c] font-semibold text-base">Keamanan — Ubah Password</p>
+                                <p className="text-[#717182] text-xs mt-0.5">Pastikan password baru Anda kuat dan aman</p>
+                            </div>
+
+                            <form onSubmit={submitPassword} className="px-6 py-5 flex flex-col gap-4">
+                                <Field label="Password Saat Ini" error={pwForm.errors.current_password}>
+                                    <TextInput
+                                        type="password"
+                                        value={pwForm.data.current_password}
+                                        onChange={e => pwForm.setData('current_password', e.target.value)}
+                                        placeholder="••••••••"
+                                    />
+                                </Field>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <Field label="Password Baru" error={pwForm.errors.password}>
+                                        <TextInput
+                                            type="password"
+                                            value={pwForm.data.password}
+                                            onChange={e => pwForm.setData('password', e.target.value)}
+                                            placeholder="Min. 8 karakter"
+                                        />
+                                    </Field>
+                                    <Field label="Konfirmasi Password">
+                                        <TextInput
+                                            type="password"
+                                            value={pwForm.data.password_confirmation}
+                                            onChange={e => pwForm.setData('password_confirmation', e.target.value)}
+                                            placeholder="Ulangi password baru"
+                                        />
+                                    </Field>
+                                </div>
+
+                                <div className="flex items-center gap-3 pt-1">
+                                    <button
+                                        type="submit"
+                                        disabled={pwForm.processing}
+                                        className="bg-[#e53935] hover:bg-[#c62828] text-white font-medium text-sm px-5 h-9 rounded-lg transition disabled:opacity-60"
+                                    >
+                                        {pwForm.processing ? 'Memperbarui...' : 'Perbarui Password'}
+                                    </button>
+                                    {pwForm.recentlySuccessful && (
+                                        <p className="text-[#007a55] text-sm">✓ Password diperbarui</p>
+                                    )}
+                                </div>
+                            </form>
+                        </Card>
+
+                        {/* Notifikasi */}
+                        <Card topColor="#00796b">
+                            <div className="px-6 pt-5 pb-4 border-b border-black/[0.07]">
+                                <p className="text-[#2c2c2c] font-semibold text-base">Preferensi Notifikasi</p>
+                                <p className="text-[#717182] text-xs mt-0.5">Pilih cara Anda menerima pembaruan status bantuan</p>
+                            </div>
+                            <div className="px-6 py-4">
+                                <Toggle
+                                    checked={notifWa}
+                                    onChange={setNotifWa}
+                                    label="Notifikasi WhatsApp"
+                                    desc="Kirim pembaruan status ke nomor WhatsApp terdaftar"
+                                />
+                                <Toggle
+                                    checked={notifEmail}
+                                    onChange={setNotifEmail}
+                                    label="Notifikasi Email"
+                                    desc="Terima informasi program bantuan melalui Email"
+                                />
+                            </div>
+                        </Card>
+
                     </div>
                 </div>
             </div>

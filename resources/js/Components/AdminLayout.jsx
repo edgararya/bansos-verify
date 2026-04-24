@@ -1,14 +1,9 @@
 import { router } from '@inertiajs/react';
-
-const imgLogo    = "https://www.figma.com/api/mcp/asset/099da505-4059-4bb3-8e1b-ed11bfa2e308";
-const imgTable   = "https://www.figma.com/api/mcp/asset/fa404191-3530-4219-b9ad-c5d42ab4ed4e";
-const imgCal     = "https://www.figma.com/api/mcp/asset/c5cbf763-af85-4357-9884-31d26ed0e635";
-const imgUser    = "https://www.figma.com/api/mcp/asset/c292449c-b37d-4285-aef3-9ecfa1f0b514";
-const imgLogout  = "https://www.figma.com/api/mcp/asset/44776bf3-46da-4d47-bd98-a62300069518";
+import { ShieldCheck, Table, Calendar, User, LogOut } from 'lucide-react';
 
 const MENU = [
-    { key: 'prioritas', label: 'Tabel Prioritas Pemohon', icon: imgTable,  href: 'admin.dashboard' },
-    { key: 'jadwal',    label: 'Jadwal & Penyaluran',     icon: imgCal,    href: 'admin.schedule' },
+    { key: 'prioritas', label: 'Tabel Prioritas Pemohon', Icon: Table,    href: 'admin.dashboard' },
+    { key: 'jadwal',    label: 'Jadwal & Penyaluran',     Icon: Calendar, href: 'admin.schedule' },
 ];
 
 export default function AdminLayout({ children, activeMenu, user }) {
@@ -21,7 +16,7 @@ export default function AdminLayout({ children, activeMenu, user }) {
             <aside className="w-64 bg-white border-r border-black/10 shadow flex flex-col shrink-0">
                 <div className="flex items-center gap-2 px-6 py-6">
                     <div className="bg-[#00796b] w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0">
-                        <img src={imgLogo} alt="logo" className="w-6 h-6" />
+                        <ShieldCheck size={24} color="white" />
                     </div>
                     <div>
                         <p className="text-[#00796b] font-bold text-[18px] leading-[22px]">Admin Desa</p>
@@ -42,7 +37,7 @@ export default function AdminLayout({ children, activeMenu, user }) {
                                     color: isActive ? '#00796b' : '#717182',
                                 }}
                             >
-                                <img src={item.icon} alt="" className="w-5 h-5 shrink-0" />
+                                <item.Icon size={20} />
                                 {item.label}
                             </button>
                         );
@@ -52,7 +47,7 @@ export default function AdminLayout({ children, activeMenu, user }) {
                 <div className="border-t border-black/10 px-4 py-4 flex flex-col gap-4">
                     <div className="flex items-center gap-3 px-2">
                         <div className="w-10 h-10 rounded-full bg-[#f5f7fa] border-2 border-white shadow flex items-center justify-center shrink-0">
-                            <img src={imgUser} alt="" className="w-5 h-5" />
+                            <User size={20} color="#717182" />
                         </div>
                         <div>
                             <p className="text-[#2c2c2c] text-sm font-medium">{user?.name ?? 'Bapak RT / Admin'}</p>
@@ -63,7 +58,7 @@ export default function AdminLayout({ children, activeMenu, user }) {
                         onClick={handleLogout}
                         className="flex items-center gap-2 h-9 w-full border border-black/10 bg-white rounded-lg px-3 hover:bg-red-50 transition"
                     >
-                        <img src={imgLogout} alt="" className="w-4 h-4" />
+                        <LogOut size={16} color="#e7000b" />
                         <span className="text-[#e7000b] text-sm font-medium">Keluar</span>
                     </button>
                 </div>
@@ -73,7 +68,7 @@ export default function AdminLayout({ children, activeMenu, user }) {
                 <div className="xl:hidden sticky top-0 z-20 h-16 bg-[#00796b] border-b border-black/10 flex items-center justify-between px-5">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                            <img src={imgLogo} alt="" className="w-4 h-4" />
+                            <ShieldCheck size={16} color="white" />
                         </div>
                         <p className="text-white text-2xl font-medium">Panel Admin Desa</p>
                     </div>

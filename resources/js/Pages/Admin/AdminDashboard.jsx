@@ -2,17 +2,14 @@ import { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import AdminLayout from '@/Components/AdminLayout';
 import ModalValidasi from '@/Components/ModalValidasi';
-
-const imgSearch = "https://www.figma.com/api/mcp/asset/aeb7ef3f-20e4-42a9-a096-afca488954cd";
-const imgCheck  = "https://www.figma.com/api/mcp/asset/b88281c9-662a-42cc-8dac-3b2fb90023d9";
-const imgView   = "https://www.figma.com/api/mcp/asset/a19ac471-df20-47bb-a5d5-e092d2bc87a1";
+import { Search, CheckCircle, Eye } from 'lucide-react';
 
 const SAMPLE = [
-    { id: 1, nama: 'Siti Aminah',  nik: '3171234567890124', pekerjaan: 'Pedagang Kecil',   penghasilan: 'Rp 1.200.000/bln', tanggungan: '3 orang', skor: 92, status: 'Menunggu',     statusColor: '#00796b', ktp_photo: null },
-    { id: 2, nama: 'Budi Santoso', nik: '3171234567890123', pekerjaan: 'Buruh Harian',     penghasilan: 'Rp 1.500.000/bln', tanggungan: '2 orang', skor: 85, status: 'Menunggu',     statusColor: '#00796b', ktp_photo: null },
-    { id: 3, nama: 'Rina Marlina', nik: '3171234567890126', pekerjaan: 'Ibu Rumah Tangga', penghasilan: 'Rp 2.000.000/bln', tanggungan: '4 orang', skor: 75, status: 'Terverifikasi', statusColor: '#3f51b5', ktp_photo: null },
-    { id: 4, nama: 'Joko Widodo',  nik: '3171234567890125', pekerjaan: 'Karyawan Swasta',  penghasilan: 'Rp 4.500.000/bln', tanggungan: '1 orang', skor: 45, status: 'Menunggu',     statusColor: '#00796b', catatan: null },
-    { id: 5, nama: 'Ahmad Dahlan', nik: '3171234567890127', pekerjaan: 'PNS',              penghasilan: 'Rp 7.000.000/bln', tanggungan: '0 orang', skor: 30, status: 'Ditolak',      statusColor: '#d32f2f', catatan: 'Pendapatan melebihi batas kelayakan' },
+    { id: 1, nama: 'Siti Aminah',     nik: '320101010010001', pekerjaan: 'unemployed',  penghasilan: 'Rp 0/bln',         tanggungan: '3 orang', skor: 95, status: 'Menunggu',     statusColor: '#00796b', ktp_photo: null },
+    { id: 2, nama: 'Ratna Wulandari', nik: '320101010010005', pekerjaan: 'informal',    penghasilan: 'Rp 500.000/bln',   tanggungan: '2 orang', skor: 73, status: 'Menunggu',     statusColor: '#00796b', ktp_photo: null },
+    { id: 3, nama: 'Dewi Lestari',    nik: '320101010010003', pekerjaan: 'informal',    penghasilan: 'Rp 1.200.000/bln', tanggungan: '4 orang', skor: 71, status: 'Menunggu',     statusColor: '#00796b', ktp_photo: null },
+    { id: 4, nama: 'Budi Santoso',    nik: '320101010010002', pekerjaan: 'informal',    penghasilan: 'Rp 800.000/bln',   tanggungan: '1 orang', skor: 59, status: 'Menunggu',     statusColor: '#00796b', ktp_photo: null },
+    { id: 5, nama: 'Ahmad Fauzi',     nik: '320101010010004', pekerjaan: 'formal',      penghasilan: 'Rp 4.500.000/bln', tanggungan: '0 orang', skor: 8,  status: 'Menunggu',     statusColor: '#d32f2f', catatan: 'Pendapatan melebihi batas kelayakan', ktp_photo: null },
 ];
 
 function getSkorStyle(skor) {
@@ -32,11 +29,7 @@ export default function AdminDashboard() {
         d.nama.toLowerCase().includes(search.toLowerCase()) || d.nik.includes(search)
     );
 
-    function handleSuccess() {
-        // Inertia will reload data, so we don't necessarily need to update state manually
-        // but if we want immediate feedback before reload:
-        // setList(prev => ...)
-    }
+    function handleSuccess() {}
 
     return (
         <AdminLayout activeMenu="prioritas" user={auth?.user}>
@@ -49,7 +42,7 @@ export default function AdminDashboard() {
                         </p>
                     </div>
                     <div className="relative">
-                        <img src={imgSearch} alt="" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
+                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#717182]" />
                         <input
                             type="text"
                             placeholder="Cari nama atau NIK..."
@@ -68,7 +61,7 @@ export default function AdminDashboard() {
                         className="flex items-start gap-3 px-4 py-4"
                         style={{ background: '#ecfdf5', borderBottom: '0.8px solid #d0fae5' }}
                     >
-                        <img src={imgCheck} alt="" className="w-5 h-5 mt-0.5 shrink-0" />
+                        <CheckCircle size={20} className="text-[#007a55] mt-0.5 shrink-0" />
                         <p className="text-[#006045] text-sm">
                             <strong>Tips Validasi Lapangan:</strong> Warga dengan sorotan{' '}
                             <span className="font-semibold text-[#007a55]">hijau</span>{' '}
@@ -131,7 +124,7 @@ export default function AdminDashboard() {
                                                     onClick={() => setSelected(row)}
                                                     className="inline-flex items-center gap-2 border border-black/10 bg-white rounded-lg px-3 h-8 text-sm font-medium text-[#2c2c2c] hover:bg-[rgba(0,121,107,0.05)] hover:border-[#00796b] transition"
                                                 >
-                                                    <img src={imgView} alt="" className="w-4 h-4" />
+                                                    <Eye size={16} />
                                                     Validasi
                                                 </button>
                                             </td>
